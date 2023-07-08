@@ -12,6 +12,22 @@
  	.text
 	.global _start
 _start:
+	mov $0, %ax 
+	mov %ax, %ds 
+	mov %ax, %ss
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	
+	mov $_start, %esp
+	
+
+	mov $0xe, %ah
+	mov $'L', %al
+	int $0x10
+	mov $0xe, %ah
+	mov $'e', %al
+	int $0x10
 	jmp .
 	
 	// 引导结束段
