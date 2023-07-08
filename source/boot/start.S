@@ -25,9 +25,22 @@ _start:
 	mov $0xe, %ah
 	mov $'L', %al
 	int $0x10
-	mov $0xe, %ah
-	mov $'e', %al
-	int $0x10
+
+read_loader:
+	// 磁盘参数读取，有些一步到位了（分高8与低8位）。
+	mov $0x8000, %bx
+	mov $0x2, %ax
+	mov $0x2, %cx
+	mov $64, %al    
+	mov $0x0080,%dx
+	int $0x13
+
+	//Jump if Carry 是否有进位标志
+	jc read_loader
+
+
+
+
 	jmp .
 	
 	// 引导结束段
