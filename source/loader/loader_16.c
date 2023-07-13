@@ -2,6 +2,7 @@ __asm__(".code16gcc");
 
 #include "loader.h"
 
+
 static boot_info_t boot_info;
 
 
@@ -55,8 +56,33 @@ static void detect_memory(void){
 	show_msg("ok\r\n");
 }
 
+//gdt表
+uint16_t gdt_table[][4] = {
+	{0,0,0,0},
+	{0xFFFF,0x0000,0x9A00,0x00cf},
+	{0xFFFF,0x0000,0x9200,0x00cf},
+};
+
+//进入保护模式
+static void enter_protect_mode(void) {
+	cli(); //关中断
+	//打开A20地址线，不开启无法访问4GB内存
+	uint8_t v = inb(0x92);
+	outb(0x92, v | 0x2);
+	//加载gdt表
+	lgdt((uint32_t)gdt_table,sizeof(gdt_table));
+
+	//读取cr0
+	uint32_t cr0 = read_cr0();
+	write_cr0(cr0 | (1 << 0));
+	//跳转
+	far_jump(8,(uint32_t)protect_mode_entry);
+}
+
+
 void loader_entry(void) {
-    show_msg("....loading.....\n\r");
-	detect_memory();
+    show_msg("....loading.....\n\r"); //调用BIOS中断显示字符串
+	detect_memory(); // 调用BIOS中断查看内存
+	enter_protect_mode();// 进入保护模式
     for(;;) {}
 }
