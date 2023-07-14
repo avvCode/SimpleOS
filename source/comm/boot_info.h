@@ -14,4 +14,6 @@ typedef struct _boot_info_t {
     }ram_region_cfg[BOOT_RAM_REGION_MAX];
     int ram_region_count;
 }boot_info_t;
+
+#define SECTOR_SIZE 512
 #endif

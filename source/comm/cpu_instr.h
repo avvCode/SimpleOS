@@ -14,6 +14,16 @@ static inline uint8_t inb(uint16_t port){
     );
     return rv;
 }
+static inline uint8_t inw(uint16_t port){
+    uint16_t rv; //保存从端口读出来的一个数据
+
+    //inb 向port读取一个字节
+    //inb al,dx
+    __asm__ __volatile__(
+        "in %[p],%[v]":[v]"=a"(rv) : [p]"d"(port)
+    );
+    return rv;
+}
 //写端口
 static inline void outb(uint16_t port, uint8_t data){
     // outb al,dx
@@ -54,4 +64,6 @@ static inline void far_jump(uint32_t selector, uint32_t offset) {
 	uint32_t addr[] = {offset, selector };
 	__asm__ __volatile__("ljmpl *(%[a])"::[a]"r"(addr));
 }
+
+
 #endif
