@@ -17,4 +17,5 @@ typedef struct _boot_info_t {
 
 #define SECTOR_SIZE 512
 #define SYS_KERNEL_LOAD_ADDR (1024*1024) // 1MB以上的位置 内核
+
 #endif

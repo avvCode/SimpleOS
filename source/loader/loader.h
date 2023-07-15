@@ -16,4 +16,7 @@ typedef struct SMAP_entry {
     uint32_t Type; // entry Type
     uint32_t ACPI; // extended
 }__attribute__((packed)) SMAP_entry_t;
+
+extern boot_info_t boot_info;
+
 #endif

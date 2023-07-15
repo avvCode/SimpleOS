@@ -19,9 +19,7 @@ static inline uint8_t inw(uint16_t port){
 
     //inb 向port读取一个字节
     //inb al,dx
-    __asm__ __volatile__(
-        "in %[p],%[v]":[v]"=a"(rv) : [p]"d"(port)
-    );
+    __asm__ __volatile__("in %1, %0" : "=a" (rv) : "dN" (port));
     return rv;
 }
 //写端口

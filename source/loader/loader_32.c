@@ -1,5 +1,7 @@
 #include "loader.h"
 
+
+
 static void read_disk(uint32_t sector, uint32_t sector_count,uint8_t * buf){
     outb(0x1F6,(uint8_t) 0xE0);
     
@@ -26,5 +28,7 @@ static void read_disk(uint32_t sector, uint32_t sector_count,uint8_t * buf){
 }
 void load_kernel(void){
     read_disk(100, 500,(uint8_t * ) SYS_KERNEL_LOAD_ADDR); // 将操作系统内核从磁盘读到内存中
+    //将代码运行跳转到内核代码
+    ((void (*)(boot_info_t *))SYS_KERNEL_LOAD_ADDR)(&boot_info);
     for(;;){}
 }

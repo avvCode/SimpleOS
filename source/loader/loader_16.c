@@ -3,8 +3,7 @@ __asm__(".code16gcc");
 #include "loader.h"
 
 
-static boot_info_t boot_info;
-
+boot_info_t boot_info;
 
 
 /**
@@ -38,7 +37,7 @@ static void detect_memory(void){
 			: "a"(0xE820), "b"(contID), "c"(24), "d"(0x534D4150), "D"(entry)
 		);
 		if(signature != 0x534D4150){
-			show_msg("failed\r\n");
+			show_msg("failed.\r\n");
 			return;
 		}
 		if(bytes > 20 && (entry->ACPI & 0x0001) == 0){
@@ -53,14 +52,14 @@ static void detect_memory(void){
 			break;
 		}
 	}
-	show_msg("ok\r\n");
+	show_msg("ok.\r\n");
 }
 
 //gdt表
 uint16_t gdt_table[][4] = {
 	{0,0,0,0},
-	{0xFFFF,0x0000,0x9A00,0x00cf},
-	{0xFFFF,0x0000,0x9200,0x00cf},
+	{0xFFFF,0x0000,0x9A00,0x00CF},
+	{0xFFFF,0x0000,0x9200,0x00CF},
 };
 
 //进入保护模式
