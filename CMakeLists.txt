@@ -14,9 +14,11 @@ endif ()
 
 # set(TOOL_PREFIX  "x86_64-elf-")
 # set(TOOL_PREFIX  "i686-elf-")
+set(CMAKE_SYSTEM_NAME "Generic")
+set(CMAKE_SYSTEM_VERSION "0.0.0")
 
 # C编译器与参数配置
-set(CMAKE_C_COMPILER "${TOOL_PREFIX}gcc") 
+set(CMAKE_C_COMPILER "${TOOL_PREFIX}gcc")
 set(CMAKE_C_FLAGS "-g -c -O0 -m32 -fno-pie -fno-stack-protector -fno-asynchronous-unwind-tables")
 
 # 汇编器与参数配置
@@ -54,7 +56,7 @@ add_subdirectory(./source/kernel)
 
 # 添加编译依赖，先生成app库，再生成kernel和shell
 # 不加则cmake则可能先编译shell和kernel，而缺少libapp，导致编译错误
-# add_dependencies(init app)       
+# add_dependencies(init app)
 # add_dependencies(shell app)
 # add_dependencies(loop app)
 # add_dependencies(kernel init)

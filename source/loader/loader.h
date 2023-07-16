@@ -1,13 +1,18 @@
+/**
+ * 二级加载部分，用于实现更为复杂的初始化、内核加载的工作。
+ *
+ */
 #ifndef LOADER_H
 #define LOADER_H
-
 
 #include "comm/types.h"
 #include "comm/boot_info.h"
 #include "comm/cpu_instr.h"
 
-void protect_mode_entry(void);
+// 保护模式入口函数，在start.asm中定义
+void protect_mode_entry (void);
 
+// 内存检测信息结构
 typedef struct SMAP_entry {
     uint32_t BaseL; // base address uint64_t
     uint32_t BaseH;
@@ -19,4 +24,4 @@ typedef struct SMAP_entry {
 
 extern boot_info_t boot_info;
 
-#endif
+#endif // LOADER_H
