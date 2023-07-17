@@ -1,9 +1,16 @@
 #include "cpu/cpu.h"
 #include "os_cfg.h"
+#include "comm/cpu_instr.h"
 static segment_desc_t gdt_table[GDT_TABLE_SIZE];
 
 void segment_desc_set(int selector, uint32_t base, uint32_t limit, uint16_t attr) {
     segment_desc_t * desc = gdt_table + selector  / sizeof(segment_desc_t);
+
+    //limit超过可表示的范围
+    if(limit > 0xFFFFF){
+        attr |= 0x8000;
+        limit /= 0x1000;
+    }
 
     desc->limit15_0 = limit & 0xffff;
 	desc->base15_0 = base & 0xffff;
@@ -16,6 +23,18 @@ void init_gdt (void) {
     for(int i = 0; i < GDT_TABLE_SIZE; i++){
         segment_desc_set( i << 3, 0 , 0 , 0);
     }
+    //数据段
+    segment_desc_set(KERNEI_SELECTOR_DS, 0, 0xFFFFFFFF,
+        SEG_P_PRESENT | SEG_DPL0 | SEG_S_NORMAL | SEG_TYPE_DATA
+        | SEG_TYPE_RW | SEG_D
+    );
+    //代码段
+    segment_desc_set(KERNEI_SELECTOR_CS, 0, 0xFFFFFFFF,
+        SEG_P_PRESENT | SEG_DPL0 | SEG_S_NORMAL | SEG_TYPE_CODE
+        | SEG_TYPE_RW | SEG_D
+    );
+    //加载GDT
+    lgdt((uint32_t) gdt_table, sizeof(gdt_table));
 }
 
 void cpu_init(void){

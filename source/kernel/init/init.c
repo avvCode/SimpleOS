@@ -12,5 +12,9 @@
 void kernel_init (boot_info_t * boot_info) {
     //初始化GDT表
     cpu_init();
-    for (;;) {}
+    
+}
+
+void init_main(void){
+    for(;;){}
 }
