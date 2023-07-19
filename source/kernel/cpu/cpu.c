@@ -31,12 +31,12 @@ void init_gdt (void) {
         segment_desc_set( i << 3, 0 , 0 , 0);
     }
     //数据段
-    segment_desc_set(KERNEI_SELECTOR_DS, 0, 0xFFFFFFFF,
+    segment_desc_set(KERNEL_SELECTOR_DS, 0, 0xFFFFFFFF,
         SEG_P_PRESENT | SEG_DPL0 | SEG_S_NORMAL | SEG_TYPE_DATA
         | SEG_TYPE_RW | SEG_D
     );
     //代码段
-    segment_desc_set(KERNEI_SELECTOR_CS, 0, 0xFFFFFFFF,
+    segment_desc_set(KERNEL_SELECTOR_CS, 0, 0xFFFFFFFF,
         SEG_P_PRESENT | SEG_DPL0 | SEG_S_NORMAL | SEG_TYPE_CODE
         | SEG_TYPE_RW | SEG_D
     );
