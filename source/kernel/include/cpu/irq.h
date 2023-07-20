@@ -2,8 +2,7 @@
 #define IRQ_H
 
 
-#include "comm/types.h"
-
+// 中断号码
 #define IRQ0_DE             0
 #define IRQ1_DB             1
 #define IRQ2_NMI            2
@@ -24,18 +23,20 @@
 #define IRQ19_XM            19
 #define IRQ20_VE            20
 
+#define IRQ0_TIMER          0x20
 
 /**
  * 中断发生时相应的栈结构，暂时为无特权级发生的情况
  */
 typedef struct _exception_frame_t {
-     // 结合压栈的过程，以及pusha指令的实际压入过程
+    // 结合压栈的过程，以及pusha指令的实际压入过程
     int gs, fs, es, ds;
     int edi, esi, ebp, esp, ebx, edx, ecx, eax;
     int num;
     int error_code;
     int eip, cs, eflags;
 }exception_frame_t;
+
 typedef void(*irq_handler_t)(void);
 
 void irq_init (void);
@@ -62,7 +63,6 @@ void exception_handler_machine_check (void);
 void exception_handler_smd_exception (void);
 void exception_handler_virtual_exception (void);
 
-
 // PIC控制器相关的寄存器及位配置
 #define PIC0_ICW1			0x20
 #define PIC0_ICW2			0x21
@@ -82,10 +82,15 @@ void exception_handler_virtual_exception (void);
 #define PIC_ICW1_ALWAYS_1	(1 << 4)		// 总为1的位
 #define PIC_ICW4_8086	    (1 << 0)        // 8086工作模式
 
+#define PIC_OCW2_EOI		(1 << 5)		// 1 - 非特殊结束中断EOI命令
+
 #define IRQ_PIC_START		0x20			// PIC中断起始号
 
 void irq_enable(int irq_num);
-void irq_enable(int irq_num);
-void irq_disable_global (void);
-void irq_enable_global (void);
+void irq_disable(int irq_num);
+void irq_disable_global(void);
+void irq_enable_global(void);
+
+void pic_send_eoi(int irq);
+
 #endif

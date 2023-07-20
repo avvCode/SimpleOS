@@ -132,6 +132,7 @@ void irq_init(void){
 	irq_install(IRQ18_MC, exception_handler_machine_check);
 	irq_install(IRQ19_XM, exception_handler_smd_exception);
 	irq_install(IRQ20_VE, exception_handler_virtual_exception);
+	
 
     lidt((uint32_t) idt_table, sizeof(idt_table));
 }
@@ -183,4 +184,12 @@ void irq_disable_global (void){
 
 void irq_enable_global (void){
 	sti();
+}
+
+void pic_send_eoi (int irq_num) {
+	irq_num -= IRQ_PIC_START;
+	if(irq_num >= 8){
+		outb(PIC1_OCW2, PIC_OCW2_EOI);
+	}
+	outb(PIC0_OCW2, PIC_OCW2_EOI);
 }
