@@ -1,6 +1,9 @@
 #ifndef IRQ_H
 #define IRQ_H
 
+
+#include "comm/types.h"
+
 #define IRQ0_DE             0
 #define IRQ1_DB             1
 #define IRQ2_NMI            2
@@ -22,9 +25,11 @@
 #define IRQ20_VE            20
 
 
-#include "comm/types.h"
-
+/**
+ * 中断发生时相应的栈结构，暂时为无特权级发生的情况
+ */
 typedef struct _exception_frame_t {
+     // 结合压栈的过程，以及pusha指令的实际压入过程
     int gs, fs, es, ds;
     int edi, esi, ebp, esp, ebx, edx, ecx, eax;
     int num;
@@ -56,5 +61,28 @@ void exception_handler_alignment_check (void);
 void exception_handler_machine_check (void);
 void exception_handler_smd_exception (void);
 void exception_handler_virtual_exception (void);
+
+
+// PIC控制器相关的寄存器及位配置
+#define PIC0_ICW1			0x20
+#define PIC0_ICW2			0x21
+#define PIC0_ICW3			0x21
+#define PIC0_ICW4			0x21
+#define PIC0_OCW2			0x20
+#define PIC0_IMR			0x21
+
+#define PIC1_ICW1			0xa0
+#define PIC1_ICW2			0xa1
+#define PIC1_ICW3			0xa1
+#define PIC1_ICW4			0xa1
+#define PIC1_OCW2			0xa0
+#define PIC1_IMR			0xa1
+
+#define PIC_ICW1_ICW4		(1 << 0)		// 1 - 需要初始化ICW4
+#define PIC_ICW1_ALWAYS_1	(1 << 4)		// 总为1的位
+#define PIC_ICW4_8086	    (1 << 0)        // 8086工作模式
+
+#define IRQ_PIC_START		0x20			// PIC中断起始号
+
 
 #endif

@@ -92,6 +92,22 @@ void do_handler_virtual_exception(exception_frame_t * frame) {
 	do_default_handler(frame, "Virtualization Exception.");
 }
 
+static void init_pic (void){
+	//初始化第一块芯片
+	outb(PIC0_ICW1, PIC_ICW1_ALWAYS_1 | PIC_ICW1_ICW4);
+	outb(PIC0_ICW2, IRQ_PIC_START);
+	outb(PIC0_ICW3, 1<< 2);
+	outb(PIC0_ICW4, PIC_ICW4_8086);
+	//初始化第二块芯片
+	outb(PIC1_ICW1, PIC_ICW1_ALWAYS_1 | PIC_ICW1_ICW4);
+	outb(PIC1_ICW2, IRQ_PIC_START + 8);
+	outb(PIC1_ICW3, 2);
+	outb(PIC1_ICW4, PIC_ICW4_8086);
+
+	outb(PIC0_IMR, 0xFF & ~(1<<2)); //不禁止来自第二块8259芯片的中断信号
+	outb(PIC0_IMR, 0xff);
+}
+
 void irq_init(void){
    for (uint32_t i = 0; i < IDT_TABLE_NR; i++) {
     	gate_desc_set(idt_table + i, KERNEL_SELECTOR_CS, (uint32_t) exception_handler_unknown,
@@ -116,6 +132,7 @@ void irq_init(void){
 	irq_install(IRQ18_MC, exception_handler_machine_check);
 	irq_install(IRQ19_XM, exception_handler_smd_exception);
 	irq_install(IRQ20_VE, exception_handler_virtual_exception);
+
     lidt((uint32_t) idt_table, sizeof(idt_table));
 }
 
