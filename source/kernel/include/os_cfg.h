@@ -7,5 +7,5 @@
 #define KERNEL_STACK_SIZE       (8*1024)    // 内核栈
 
 #define OS_TICK_MS              10       	// 每毫秒的时钟数
-
+#define OS_VERSION              "1.0.0"
 #endif
