@@ -22,7 +22,8 @@ void kernel_init (boot_info_t * boot_info) {
 
 void init_main(void){
     log_printf("Kernel is running....");
-    log_printf("Version: %s", OS_VERSION);
+    log_printf("Version: %s, name: %s", OS_VERSION, "tiny x86 os");
+    log_printf("%d %d %x %c", -123, 123456, 0x12345, 'a');
     //int i = 3 / 0;
     //irq_enable_global();
     for(;;){}
