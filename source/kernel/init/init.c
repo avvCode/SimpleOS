@@ -9,7 +9,7 @@
 #include "tools/log.h"
 #include "os_cfg.h"
 #include "core/task.h"
-
+#include "comm/cpu_instr.h"
 /**
  * 内核入口
  */
@@ -29,6 +29,7 @@ void init_task_entry(void){
     int count = 0;
     for(;;){
         log_printf("init task: %d", count++);
+        task_switch_from_to(&init_task, &first_task);
     }
 }
 
@@ -37,12 +38,14 @@ void init_main(void){
     log_printf("Version: %s, name: %s", OS_VERSION, "tiny x86 os");
     log_printf("%d %d %x %c", -123, 123456, 0x12345, 'a');
     
-    task_init(&init_task, (uint32_t)init_task_entry, &init_task_stack[1024]);
+    task_init(&init_task, (uint32_t)init_task_entry,(uint32_t) &init_task_stack[1024]);
     task_init(&first_task, 0 , 0);
+    write_tr(first_task.tss_sel);
 
     int count = 0;
     for(;;){
         log_printf("init main: %d", count++);
+        task_switch_from_to(&first_task, &init_task);
     }
     init_task_entry();
 }
