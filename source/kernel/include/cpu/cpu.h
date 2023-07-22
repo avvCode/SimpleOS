@@ -27,6 +27,23 @@
 #define GATE_DPL0			(0 << 13)		// 特权级0，最高特权级
 #define GATE_DPL3			(3 << 13)		// 特权级3，最低权限
 
+/**
+ * 进程相关结构体 
+ */
+typedef struct _tss_t{
+	uint32_t pre_link;
+	uint32_t esp0, ss0, esp1, ss1, esp2, ssp2;//栈相关
+	uint32_t cr3; //虚拟内存
+	uint32_t eip, eflags, eax, ecx, edx, ebx, esp, ebp, esi, edi; //通用寄存器、运行状态
+	uint32_t es, cs, ss, ds, fs, gs; //段寄存器
+	uint32_t ldt;
+	uint32_t iomap;
+}tss_t;
+
+
+#define EFLAGS_DEFAULT (1<<1)
+#define EFLAGS_IF (1<<9)
+
 #pragma pack(1)
 
 /**
