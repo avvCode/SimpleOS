@@ -111,3 +111,25 @@ exception_handler virtual_exception, 20, 0
 
 // 硬件中断
 exception_handler timer, 0x20, 0
+
+	// simple_switch(&from, to)
+	.text
+	.global simple_switch
+simple_switch:
+	mov 4(%esp), %eax
+	mov 8(%esp), %edx
+
+	push %ebp
+	push %ebx
+	push %esi
+	push %edi
+	
+	mov %esp, (%eax)
+	mov %edx, %esp
+	
+	pop %edi
+	pop %esi
+	pop %ebx
+	pop %ebp
+
+	ret
